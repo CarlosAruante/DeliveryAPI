@@ -1,4 +1,5 @@
-﻿namespace DeliveryAPI.Models
+﻿
+namespace DeliveryAPI.Models
 {
     public class Delivery
     {

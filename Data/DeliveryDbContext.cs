@@ -1,4 +1,5 @@
-﻿using DeliveryAPI.Models;
+﻿
+using DeliveryAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryAPI.Data
@@ -13,7 +14,6 @@ namespace DeliveryAPI.Data
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
