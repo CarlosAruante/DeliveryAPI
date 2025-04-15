@@ -25,8 +25,13 @@ namespace DeliveryAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Vehicle>> GetVehicle(int id)
         {
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle = await _context.Vehicles
+                .Include(v => v.Deliveries)
+                    .ThenInclude(d => d.Orders)
+                .FirstOrDefaultAsync(v => v.Id == id);
+
             if (vehicle == null) return NotFound();
+
             return vehicle;
         }
 
@@ -57,21 +62,21 @@ namespace DeliveryAPI.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id}/deliveries")]
-        public async Task<ActionResult<IEnumerable<Delivery>>> GetDeliveriesByVehicle(int id)
-        {
-            var deliveries = await _context.Deliveries
-                .Where(d => d.IdVehicle == id)
-                .Include(d => d.Orders)
-                .ToListAsync();
+        //[HttpGet("{id}/deliveries")]
+        //public async Task<ActionResult<IEnumerable<Delivery>>> GetDeliveriesByVehicle(int id)
+        //{
+        //    var deliveries = await _context.Deliveries
+        //        .Where(d => d.IdVehicle == id)
+        //        .Include(d => d.Orders)
+        //        .ToListAsync();
 
-            if(deliveries == null || !deliveries.Any())
-            {
-                return NotFound($"Nenhuma entrega encontrada para o veículo com ID {id}.");
-            }
+        //    if(deliveries == null || !deliveries.Any())
+        //    {
+        //        return NotFound($"Nenhuma entrega encontrada para o veículo com ID {id}.");
+        //    }
 
-            return Ok(deliveries);
-        }
+        //    return Ok(deliveries);
+        //}
 
     }
 }

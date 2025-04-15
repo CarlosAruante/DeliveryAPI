@@ -18,14 +18,19 @@ namespace DeliveryAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Delivery>>> GetVehicles()
+        public async Task<ActionResult<IEnumerable<Delivery>>> GetDeliveries()
             => await _context.Deliveries.ToListAsync();
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Delivery>> GetDelivery(int id)
         {
-            var delivery = await _context.Deliveries.FindAsync(id);
+            var delivery = await _context.Deliveries
+                .Include(d => d.Vehicle)
+                .Include(d => d.Orders)
+                .FirstOrDefaultAsync(d => d.Id == id);
+
             if (delivery == null) return NotFound();
+            
             return delivery;
         }
 

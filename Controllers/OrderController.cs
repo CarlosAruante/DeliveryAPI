@@ -24,8 +24,12 @@ namespace DeliveryAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders
+                .Include(o => o.Delivery)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
             if (order == null) return NotFound();
+            
             return order;
         }
 
